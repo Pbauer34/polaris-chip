@@ -17,76 +17,127 @@ export class MyCard extends LitElement {
     this.title = 'Card Title';
     this.link = '#';
     this.image ='';
+    this.caption = '';
     this.description = '';
+    this.fancy = false;
   }
 
   static get styles() {
     return css`
       :host {
+        display: inline-flex;
+        padding: 0 8px;
+        margin-left: 120px;
+        align-items: center;
+      }
+
+      :host([fancy]) {
         display: block;
+        background-color: pink;
+        border: 2px solid fuchsia;
+        box-shadow: 10px 5px 5px red;
       }
 
       a{
+        margin-top: 10px;
         display: inline-block;
-        border-radius: 6px;
-        font-size: 16px;
-        background-color: black;
-        color: gold;
+        border-radius: 8px;
+        border-color: gold;
+        font-size: 14px;
+        background-color: gold;
+        color: black;
         text-decoration: none;
+        padding: 5px;
+        font-weight: 5px;
+        
+        
       }
 
       #card{
-        padding: 10px;
-        margin: auto;
-        width: 300px;
-        border: 10px solid gold;
+        padding: auto;
+        margin: 60px;
+        width: 400px;
+        border: 10px solid black;
+        background-color: gold;
       }
 
-      #cardlist{
-        display: flex;
-  
-      }
 
       #button_section
       {
       float: right;
       margin: 20px;
+    
         
       }
       #title
       {
-        text-align: center;
+        text-align: left;
+        padding-left: 8px;
+        font-size: 35px;
+        color: white;
+        background-color: black;
+        
       }
       
 
       div img
       {
-        width: 300px;
-        height: 200px;
+        width: 400px;
+        height: 300px;
         
         
         
       }
-      .img{
-        border: 10px solid black;
-      }
-      #description_section
+     
+      #caption_section
       {
       
-        border-style: double;
-        border-radius: 10px;
+        color: black;
+        padding: 8px;
       }
 
       p
       {
-        font-size: 15px;
+        font-size: 20px;
         text-align: center;
+      }
+
+      details summary {
+        text-align: left;
+        font-size: 20px;
+        padding: 8px 0;
+        color: black;
+        margin: 8px;
+      }
+
+      details[open] summary {
+        font-weight: bold;
+      
+      }
+      
+      details div {
+        border: 2px solid black;
+        text-align: center;
+        padding: 8px;
+        height: 140px;
+        overflow: auto;
+        background-color: white;
       }
 
 
 
 
     `;
+  }
+
+  openChanged(e) {
+    console.log(e.newState);
+    if (e.newState === "open") {
+      this.fancy = true;
+    }
+    else {
+      this.fancy = false;
+    }
   }
 
   render() {
@@ -101,9 +152,15 @@ export class MyCard extends LitElement {
       <div>
         <img class="card-image" src="${this.image}">
       </div>
-        <div id="description_section">
-          <p>${this.description}</p>
+        <div id="caption_section">
+          <p>${this.caption}</p>
         </div>
+        <details ?open="${this.fancy}" @toggle="${this.openChanged}">
+          <summary>Description</summary>
+          <div>
+          <slot>${this.description}</slot>
+          </div>
+      </details>
   </div>
   </div>
     
@@ -119,7 +176,9 @@ export class MyCard extends LitElement {
       title: { type: String },
       link: { type: String },
       image: { type: String},
-      description: { type: String }
+      caption: {type: String },
+      description: { type: String },
+      fancy: { type: Boolean, reflect: true }
     };
   }
 }
